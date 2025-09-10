@@ -1,0 +1,2 @@
+express sequelize pg pg-hstore dotenv
+jest supertest
