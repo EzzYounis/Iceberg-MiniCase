@@ -11,7 +11,7 @@ const Payment = sequelize.define('Payment', {
     allowNull: false,
   },
   amount: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT,
     allowNull: false,
   },
   type: {

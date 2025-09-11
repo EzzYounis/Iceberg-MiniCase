@@ -6,6 +6,9 @@ const models = require('./models'); // Import all models and associations
 
 app.use(express.json());
 
+// Register Party routes
+app.use('/api/parties', require('./routes/party'));
+
 //Route for test 
 app.get('/', (req, res) => {
     res.send('API is running');

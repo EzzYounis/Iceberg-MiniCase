@@ -26,12 +26,12 @@ const Transaction = sequelize.define('Transaction', {
     comment: 'Type of transaction (sale, rental, etc.)',
   },
   price: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT,
     allowNull: false,
     comment: 'Total price of the transaction',
   },
   commission_amount: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT,
     allowNull: false,
     comment: 'Total commission for the transaction',
   },

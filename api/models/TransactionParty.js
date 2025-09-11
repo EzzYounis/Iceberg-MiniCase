@@ -21,7 +21,7 @@ const TransactionParty = sequelize.define('TransactionParty', {
     comment: 'Role in the transaction (e.g., listing_agent, selling_agent, agency)',
   },
   share_percentage: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT,
     allowNull: true,
     comment: 'Percentage of commission for this party',
   },
