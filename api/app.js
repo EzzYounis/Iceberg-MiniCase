@@ -8,6 +8,8 @@ app.use(express.json());
 
 // Register Party routes
 app.use('/api/parties', require('./routes/party'));
+// Register Transaction routes
+app.use('/api/transactions', require('./routes/transaction'));
 
 //Route for test 
 app.get('/', (req, res) => {
