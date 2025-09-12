@@ -12,5 +12,7 @@ router.get('/:id', transactionController.getTransactionById);
 router.put('/:id', transactionController.updateTransaction);
 // Delete a transaction
 router.delete('/:id', transactionController.deleteTransaction);
+// Update only the status (stage) of a transaction
+router.patch('/:id/status', transactionController.updateTransactionStatus);
 
 module.exports = router;

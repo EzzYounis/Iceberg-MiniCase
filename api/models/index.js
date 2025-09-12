@@ -6,6 +6,7 @@ const Transaction = require('./Transaction');
 const TransactionParty = require('./TransactionParty');
 const Payment = require('./Payment');
 const Document = require('./Document');
+const sequelize = require('../config/database');
 
 // Associations
 // Property 1<-->N Transaction
@@ -43,4 +44,5 @@ module.exports = {
   TransactionParty,
   Payment,
   Document,
+  sequelize
 };
