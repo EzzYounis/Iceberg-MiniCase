@@ -1,3 +1,29 @@
+  test('Agents with share_percentage not summing to 100%: agency gets remainder', async () => {
+    // Create parties
+    await Party.create({ party_id: 'agency3', name: 'Agency3', contact_info: {}, created_at: new Date(), updated_at: new Date() });
+    await Party.create({ party_id: 'agent4', name: 'Agent4', contact_info: {}, created_at: new Date(), updated_at: new Date() });
+    await Party.create({ party_id: 'agent5', name: 'Agent5', contact_info: {}, created_at: new Date(), updated_at: new Date() });
+    // Create property
+    await require('../models').Property.create({ property_id: 'prop3', address: '789 Test Ave', type: 'villa', size: 200, price: 30000, created_at: new Date(), updated_at: new Date() });
+    // Create transaction
+    const transaction = await Transaction.create({ transaction_id: 'txn3', property_id: 'prop3', status: 'agreement', transaction_type: 'sale', price: 30000, commission_amount: 1500, created_at: new Date(), updated_at: new Date() });
+    // Add TransactionParty records (agent shares sum to 60%)
+    await TransactionParty.create({ id: 'tp6', transaction_id: 'txn3', role: 'agency', created_at: new Date(), party_id: 'agency3' });
+    await TransactionParty.create({ id: 'tp7', transaction_id: 'txn3', role: 'listing_agent', created_at: new Date(), party_id: 'agent4', share_percentage: 40 });
+    await TransactionParty.create({ id: 'tp8', transaction_id: 'txn3', role: 'selling_agent', created_at: new Date(), party_id: 'agent5', share_percentage: 20 });
+    // Update status to trigger commission
+    await request(app).patch('/api/transactions/txn3/status').send({ status: 'title deed' });
+    // Check payments
+    const payments = await Payment.findAll({ where: { transaction_id: 'txn3' } });
+    expect(payments.length).toBe(3);
+    const agencyPayment = payments.find(p => p.party_id === 'agency3');
+    const agent4Payment = payments.find(p => p.party_id === 'agent4');
+    const agent5Payment = payments.find(p => p.party_id === 'agent5');
+  // agent4: 40% of 1500 = 600, agent5: 20% of 1500 = 300, agency remainder: 1500 - 600 - 300 = 600
+  expect(agent4Payment.amount).toBe(600);
+  expect(agent5Payment.amount).toBe(300);
+  expect(agencyPayment.amount).toBe(600);
+  });
 const request = require('supertest');
 const app = require('../app');
 const { Transaction, TransactionParty, Payment, Party, sequelize } = require('../models');
@@ -54,8 +80,9 @@ describe('Commission Distribution Logic', () => {
     const agencyPayment = payments.find(p => p.party_id === 'agency2');
     const agent2Payment = payments.find(p => p.party_id === 'agent2');
     const agent3Payment = payments.find(p => p.party_id === 'agent3');
-    expect(agencyPayment.amount).toBe(1000);
-    expect(agent2Payment.amount).toBe(300); // 30% of 1000
-    expect(agent3Payment.amount).toBe(200); // 20% of 1000
+  // agent2: 30% of 2000 = 600, agent3: 20% of 2000 = 400, agency: 2000 - 600 - 400 = 1000
+  expect(agencyPayment.amount).toBe(1000);
+  expect(agent2Payment.amount).toBe(600); // 30% of 2000
+  expect(agent3Payment.amount).toBe(400); // 20% of 2000
   });
 });
