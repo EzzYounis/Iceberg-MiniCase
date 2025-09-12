@@ -16,6 +16,8 @@ app.use('/api/properties', require('./routes/property'));
 app.use('/api/transaction-parties', require('./routes/transactionParty'));
 // Register Payment routes
 app.use('/api/payments', require('./routes/payment'));
+// Register Document routes
+app.use('/api/documents', require('./routes/document'));
 
 //Route for test 
 app.get('/', (req, res) => {
