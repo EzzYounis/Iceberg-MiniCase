@@ -5,7 +5,6 @@ const Property = require('./Property');
 const Transaction = require('./Transaction');
 const TransactionParty = require('./TransactionParty');
 const Payment = require('./Payment');
-const Document = require('./Document');
 const sequelize = require('../config/database');
 
 // Associations
@@ -29,13 +28,6 @@ Payment.belongsTo(Transaction, { foreignKey: 'transaction_id' });
 Party.hasMany(Payment, { foreignKey: 'party_id' });
 Payment.belongsTo(Party, { foreignKey: 'party_id' });
 
-// Transaction 1<-->N Document
-Transaction.hasMany(Document, { foreignKey: 'transaction_id' });
-Document.belongsTo(Transaction, { foreignKey: 'transaction_id' });
-
-// Party 1<-->N Document (optional)
-Party.hasMany(Document, { foreignKey: 'party_id' });
-Document.belongsTo(Party, { foreignKey: 'party_id' });
 
 module.exports = {
   Party,
@@ -43,6 +35,5 @@ module.exports = {
   Transaction,
   TransactionParty,
   Payment,
-  Document,
   sequelize
 };
